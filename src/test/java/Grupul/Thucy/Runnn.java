@@ -6,5 +6,5 @@ public class Runnn {
         Testul t = new Testul();
         AnotareCiumeagaLogic.parse(t);
     }
-
+    //
 }
