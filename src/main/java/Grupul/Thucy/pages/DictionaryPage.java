@@ -1,28 +1,28 @@
 package Grupul.Thucy.pages;
 
-import ch.lambdaj.function.convert.Converter;
-import net.thucydides.core.annotations.DefaultUrl;
-import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import net.thucydides.core.pages.WebElementFacade;
-
-import net.thucydides.core.annotations.findby.FindBy;
-
-import net.thucydides.core.pages.PageObject;
+import static ch.lambdaj.Lambda.convert;
 
 import java.util.List;
 
-import static ch.lambdaj.Lambda.convert;
+import net.thucydides.core.annotations.DefaultUrl;
+import net.thucydides.core.annotations.findby.FindBy;
+import net.thucydides.core.pages.PageObject;
+import net.thucydides.core.pages.WebElementFacade;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+
+import ch.lambdaj.function.convert.Converter;
+
+import com.gargoylesoftware.htmlunit.ElementNotFoundException;
 
 @DefaultUrl("http://en.wiktionary.org/wiki/Wiktionary:Main_Page")
 public class DictionaryPage extends PageObject {
 
-    @FindBy(name="search")
+    @FindBy(name = "search")
     private WebElementFacade searchTerms;
 
-    @FindBy(name="go")
+    @FindBy(name = "go")
     private WebElementFacade lookupButton;
 
     public void enter_keywords(String keyword) {
@@ -41,9 +41,32 @@ public class DictionaryPage extends PageObject {
 
     private Converter<WebElement, String> toStrings() {
         return new Converter<WebElement, String>() {
+
             public String convert(WebElement from) {
                 return from.getText();
             }
         };
     }
+
+    public void explicitWait() {
+
+        int timer = 0;
+        // wait for 30 seconds max
+        while (timer < 30) {
+            try {
+                WebElementFacade webElem = find(By.id("aidi"));
+                if (webElem.isCurrentlyVisible()) {
+                    // bla bla
+                    webElem.click();
+                } else {
+                    waitABit(1000);
+                    timer++;
+                }
+            }
+            catch (ElementNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 }
